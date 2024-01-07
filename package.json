@@ -1,0 +1,23 @@
+{
+  "name": "api_crud_consumer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node index.ts",
+    "build": "tsc", 
+    "prod": "npm run build && node indexnp.js", 
+    "start": "node index2.js", 
+    "test": "echo \"Error: no test specified\" && exit 1"
+    },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/readline-sync": "^1.4.7",
+    "axios": "^1.6.2",
+    "express": "^4.18.2",
+    "readline-sync": "^1.4.10"
+  }
+}
