@@ -96,7 +96,7 @@ export async function listarEditarProdutos() {
     // Lista produtos cadastrados
     console.log('Selecione abaixo o produto para Alterar/Excluir:')
     try {
-        let opcao, produtoId, produto: { _id: any; nome: any; qtdeEstoque?: any; preco?: any; _idFornFK?: any; } 
+        let opcao, produtoId, produto: { _id: any; nome: any; qtdeEstoque?: any; preco?: any; _idFornFK?: any; }
         await axios.get('http://localhost:3000/produtos').then(
             (result: { data: { _id: string; nome: string; }[]; }) => {
                 const vetProdutos = result.data.map(({ _id, nome }) => `-> ${_id} - ${nome}`)
@@ -115,7 +115,7 @@ export async function listarEditarProdutos() {
             console.clear();
             const produto = axios.get(`http://localhost:3000/produtos/${produtoId}`).then((result: { data: { _id: any; nome: any; qtdeEstoque: any; preco: any; _idFornFK: any; }; }) => {
                 const opcoesDeMenu = ['Alterar', 'Excluir'];
-                
+
                 //produto = result.data;
                 console.log('-----------------------------------');
                 console.log(' DETALHE DO PRODUTO');
@@ -125,7 +125,7 @@ export async function listarEditarProdutos() {
                 console.log(`QTDE: ${result.data.qtdeEstoque} PREÇO: ${result.data.preco} ID_FORN: ${result.data._idFornFK}`);
                 console.log('-----------------------------------');
                 return result.data
-            }); 
+            });
             opcao = input.keyInSelect(['Alterar', 'Excluir'], 'Digite a opção: ',
                 { cancel: 'Sair' }); // CANCEL = -1
 
