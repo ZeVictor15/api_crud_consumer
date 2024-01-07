@@ -131,12 +131,16 @@ export async function listarEditarProdutos() {
 
             switch (opcao) {
                 case 0: // Alterar
-                    Produto.nome = input.question('NOME: ');
-                    Produto.qtdeEstoque = parseInt(input.question('QTDE ESTOQUE: '));
-                    Produto.preco = parseFloat(input.question('PREÇO: '));
-                    Produto._idFornFK = parseInt(input.question('ID FORNECEDOR: '));
-                    await axios.put(`http://localhost:3000/produtos/${Produto._id}`,
-                        produto).then((result: { data: { message: any; }; }) => console.log(result.data.message));
+                    const produtoData = await produto;
+                    const produtoId = produtoData._id;
+                    const updatedProduto = {
+                        nome: input.question('NOME: '),
+                        qtdeEstoque: parseInt(input.question('QTDE ESTOQUE: ')),
+                        preco: parseFloat(input.question('PREÇO: ')),
+                        _idFornFK: parseInt(input.question('ID FORNECEDOR: '))
+                    };
+                    await axios.put(`http://localhost:3000/produtos/${produtoId}`, updatedProduto)
+                        .then((result: { data: { message: any; }; }) => console.log(result.data.message));
                     break;
                 case 1: // Excluir
                     const excluir = input.keyInYN(`Deseja excluir o produto "${(await produto)._id} - ${(await produto).nome}" (y=sim / n=não)?`);
