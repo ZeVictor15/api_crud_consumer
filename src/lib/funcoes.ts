@@ -91,13 +91,12 @@ export async function adicionarProduto() {
         console.log('ERRO: ' + error);
     }
 }
-
-
 export async function listarEditarProdutos() {
+    const Produto = require('../classes/produto');
     // Lista produtos cadastrados
     console.log('Selecione abaixo o produto para Alterar/Excluir:')
     try {
-        let opcao, produtoId, produto
+        let opcao, produtoId, produto: { _id: any; nome: any; qtdeEstoque?: any; preco?: any; _idFornFK?: any; } 
         await axios.get('http://localhost:3000/produtos').then(
             (result: { data: { _id: string; nome: string; }[]; }) => {
                 const vetProdutos = result.data.map(({ _id, nome }) => `-> ${_id} - ${nome}`)
@@ -114,23 +113,19 @@ export async function listarEditarProdutos() {
             });
         if (opcao !== -1) { // -1 -> Sair
             console.clear();
-            await axios.get(`http://localhost:3000/produtos/${produtoId}`).then((result: {
-                data: {
-                    _id: string;
-                    nome: string; qtdeEstoque: number; preco: string; _idFornFK: string;
-                };
-            }) => {
-                produto = result.data;
+            const produto = axios.get(`http://localhost:3000/produtos/${produtoId}`).then((result: { data: { _id: any; nome: any; qtdeEstoque: any; preco: any; _idFornFK: any; }; }) => {
+                const opcoesDeMenu = ['Alterar', 'Excluir'];
+                
+                //produto = result.data;
                 console.log('-----------------------------------');
                 console.log(' DETALHE DO PRODUTO');
                 console.log('-----------------------------------');
                 console.log(`ID: ${result.data._id}`);
                 console.log(`NOME: ${result.data.nome}`);
-                console.log(`QTDE: ${result.data.qtdeEstoque} 
-                PREÇO: ${result.data.preco} ID_FORN: ${result.data._idFornFK}`);
-
+                console.log(`QTDE: ${result.data.qtdeEstoque} PREÇO: ${result.data.preco} ID_FORN: ${result.data._idFornFK}`);
                 console.log('-----------------------------------');
-            });
+                return result.data
+            }); 
             opcao = input.keyInSelect(['Alterar', 'Excluir'], 'Digite a opção: ',
                 { cancel: 'Sair' }); // CANCEL = -1
 
@@ -142,16 +137,14 @@ export async function listarEditarProdutos() {
                     Produto._idFornFK = parseInt(input.question('ID FORNECEDOR: '));
                     await axios.put(`http://localhost:3000/produtos/${Produto._id}`,
                         produto).then((result: { data: { message: any; }; }) => console.log(result.data.message));
-
                     break;
                 case 1: // Excluir
-                    const excluir = input.keyInYN(`Deseja excluir o produto "${Produto._id}-${Produto.nome}" (y=sim / n=não)?`)
-
-                    if (excluir)
-
-                        await axios.delete(`http://localhost:3000/produtos/${Produto._id}`).then((result: { data: { message: any; }; }) =>
-                            console.log(result.data.message));
-
+                    const excluir = input.keyInYN(`Deseja excluir o produto "${(await produto)._id} - ${(await produto).nome}" (y=sim / n=não)?`);
+                    if (excluir) {
+                        const produtoData = await produto;
+                        const produtoId = produtoData._id;
+                        await axios.delete(`http://localhost:3000/produtos/${produtoId}`).then((result: { data: { message: any; }; }) => console.log(result.data.message));
+                    }
                     break;
                 case -1:
                     console.log('Operação de "Alteração/Exclusão" CANCELADA!');
