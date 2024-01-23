@@ -1,10 +1,7 @@
 const Produto = require('../classes/produto');
-
 import axios from 'axios';
 import input from 'readline-sync';
-
 const Fornecedor = require('../classes/fornecedor');
-
 //FUNÇÕES CRUD para consumo da API
 export async function listarFornecedores() {
     // Lista fornecedores cadastrados
@@ -115,7 +112,6 @@ export async function listarEditarProdutos() {
             console.clear();
             const produto = axios.get(`http://localhost:3000/produtos/${produtoId}`).then((result: { data: { _id: any; nome: any; qtdeEstoque: any; preco: any; _idFornFK: any; }; }) => {
                 const opcoesDeMenu = ['Alterar', 'Excluir'];
-
                 //produto = result.data;
                 console.log('-----------------------------------');
                 console.log(' DETALHE DO PRODUTO');
